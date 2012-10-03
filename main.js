@@ -18,14 +18,14 @@
 */
 define(function (require, exports, module) {
     
-    // This enforces the use of javascript strict mode (a good practice).
+    // This enforces the use of javascript strict mode (again, a good practice).
     'use strict';
 
     
     /*
         The code for our extension really starts here.
         Select "Debug > Show the developer tools" and 
-        sure you selected the "disable cache" option.
+        make sure you selected the "disable cache" option.
         You should see the following log burried under other logs
     */
     console.log("INITIALIZING EXTENSION TUTORIAL");
@@ -42,13 +42,10 @@ define(function (require, exports, module) {
         Fantastic.
         To make such magic, we'll need to create commands (which describe some
         things to execute) and then we'll make menu items to triggers commands
+
+        But first, we need to import the necessary required dependencies.
     */
     
-    
-    
-    /*
-        First, we need to import the necessary required dependencies.
-    */
     // This will let us register commands
     var CommandManager = brackets.getModule("command/CommandManager"),
     // This will let us edit the document that's currently open
@@ -60,18 +57,17 @@ define(function (require, exports, module) {
     /*
         Next are some constants used by our extension
     */
-    // We need unique IDs for our commands
+    // A unique ID for our command
     var ADD_TEXT_CMD_ID  = "toolkit.addtext";
-    // And some strings for the menu items
+    // A string for the menu items
     var ADD_TEXT_MENU_NAME   = "Add Some Text";
-    // This is our comment. Edit it as you like.
-    var SOME_TEXT = "// THIS IS OBVIOUSLY THE WORK OF A GENIUS";
+    // The text to be added.
+    var SOME_TEXT = "// THIS IS OBVIOUSLY THE WORK OF A GENIUS!";
     
     /*
-        Open your developer tools options panel, and make sure that 
-        the "disable cache" option is enabled.
-        Edit the SOME_TEXT variable, and hit Ctrl/CMD+R. 
+        Edit the SOME_TEXT variable above, and hit Ctrl/CMD+R to reload.
         Now re-select the "Add Some Text" menu: you should see your text now.
+        ->
     */
     
             
@@ -83,7 +79,7 @@ define(function (require, exports, module) {
     
     
     /*
-        This is a custom function describing how to add text to our file
+        This is the custom function describing how to add text to our file
     */
     function addSomeText() {
         
@@ -117,17 +113,20 @@ define(function (require, exports, module) {
         But for the purpose of this extension, we put everything under the Help menu
     */
     var menu = Menus.getMenu(Menus.AppMenuBar.HELP_MENU);
-    // menu dividers are a good practice to separate our menu from the rest
+    // Menu dividers are a good practice to separate our menu from the rest
     menu.addMenuDivider();
-    // this actually adds the menu item to the menu
+    // This would actually add the menu item to the menu
     menu.addMenuItem(ADD_TEXT_CMD_ID);
+    // but in this case, we'll add it later, dynamically (see below)
+    
     
 
     
     
     /*
         You're now ready to make your own extension!
-        Copy the template folder in the "extensions/user" folder, and 
+        Now, copy the "template" folder in the "extensions/user" folder, rename it,
+        and edit it.
 
         You can move this tutorial to the "extensions/disabled" folder to remove it.
 
@@ -135,7 +134,7 @@ define(function (require, exports, module) {
         from a local copy of Brackets repository.
 
         You can also take a look at the code below which implements 
-        the logic behind the "Open Extension Tutorial" command
+        the logic behind the other menu items
     */
         
     var ProjectManager = brackets.getModule("project/ProjectManager");
@@ -151,7 +150,7 @@ define(function (require, exports, module) {
         ProjectManager.openProject(srcFolder).done(
             function () {
                 var path = srcFolder + "/main.js";
-                console.log(path);
+                
                 DocumentManager.getDocumentForPath(path).done(
                     function (doc) {
                         DocumentManager.setCurrentDocument(doc);
