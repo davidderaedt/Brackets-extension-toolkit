@@ -7,6 +7,11 @@
 */
 
 
+/*These are jslint options. Using linters is recommended, but optional*/
+/*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
+/*global define, $, brackets */
+
+
 /*
     In Brackets, all js files are modules handled by requirejs.
     Leave it that way to conform to Brackets coding standards.
@@ -56,7 +61,7 @@ define(function (require, exports, module) {
         Next are some constants used by our extension
     */
     // We need unique IDs for our commands
-    var ADD_TEXT_CMD_ID  = "toolkit.addtext"; 
+    var ADD_TEXT_CMD_ID  = "toolkit.addtext";
     // And some strings for the menu items
     var ADD_TEXT_MENU_NAME   = "Add Some Text";
     // This is our comment. Edit it as you like.
@@ -93,7 +98,7 @@ define(function (require, exports, module) {
         editor._codeMirror.replaceRange(SOME_TEXT, pos);
 
         // Give focus back to the editor
-        EditorManager.focusEditor();    
+        EditorManager.focusEditor();
     }
 
     
@@ -134,60 +139,57 @@ define(function (require, exports, module) {
     */
         
     var ProjectManager = brackets.getModule("project/ProjectManager");
-    var FileUtils = brackets.getModule("file/FileUtils");    
-    var DocumentManager = brackets.getModule("document/DocumentManager");    
+    var FileUtils = brackets.getModule("file/FileUtils");
+    var DocumentManager = brackets.getModule("document/DocumentManager");
 
     var OPEN_TUT_MENU_NAME   = "Open Extension Tutorial src";
-    var OPEN_SRC_COMMAND_ID  = "toolkit.openSrc";        
-    
-    CommandManager.register(OPEN_TUT_MENU_NAME, OPEN_SRC_COMMAND_ID, openSrc);
-    
-    function openSrc(){
+    var OPEN_SRC_COMMAND_ID  = "toolkit.openSrc";
+        
+    function openSrc() {
         var srcFolder = FileUtils.getNativeModuleDirectoryPath(module);
         
         ProjectManager.openProject(srcFolder).done(
-            function(){
+            function () {
                 var path = srcFolder + "/main.js";
-                console.log(path);              
+                console.log(path);
                 DocumentManager.getDocumentForPath(path).done(
-                    function(doc) {
-                        DocumentManager.setCurrentDocument(doc);                        
+                    function (doc) {
+                        DocumentManager.setCurrentDocument(doc);
                     }
                 );
-            });
+            }
+        );
     }
-
-    var menu = Menus.getMenu(Menus.AppMenuBar.HELP_MENU);
+    
+    CommandManager.register(OPEN_TUT_MENU_NAME, OPEN_SRC_COMMAND_ID, openSrc);
     menu.addMenuItem(OPEN_SRC_COMMAND_ID, [], Menus.BEFORE, ADD_TEXT_CMD_ID);
     
 
     
     /*Open Brackets src command*/
     var OPEN_BRACKETS_MENU_NAME   = "Open Brackets src";
-    var OPEN_BRACKETS_COMMAND_ID  = "toolkit.openBracketsSrc";        
+    var OPEN_BRACKETS_COMMAND_ID  = "toolkit.openBracketsSrc";
         
     function openBracketsSrc() {
         ProjectManager.openProject(FileUtils.getNativeBracketsDirectoryPath());
     }
     
     CommandManager.register(OPEN_BRACKETS_MENU_NAME, OPEN_BRACKETS_COMMAND_ID, openBracketsSrc);
-    var menu = Menus.getMenu(Menus.AppMenuBar.HELP_MENU);
     menu.addMenuItem(OPEN_BRACKETS_COMMAND_ID);
 
     
     
     /*Open wiki command*/
     var Commands = brackets.getModule("command/Commands");
-    var NativeApp = brackets.getModule("utils/NativeApp");    
+    var NativeApp = brackets.getModule("utils/NativeApp");
     
     var OPEN_WIKI_MENU_NAME   = "Brackets Wiki";
-    var OPEN_WIKI_COMMAND_ID  = "toolkit.openBracketsWiki";        
+    var OPEN_WIKI_COMMAND_ID  = "toolkit.openBracketsWiki";
         
     function openBracketsWiki() {
         NativeApp.openURLInDefaultBrowser("https://github.com/adobe/brackets/wiki");
     }
     
     CommandManager.register(OPEN_WIKI_MENU_NAME, OPEN_WIKI_COMMAND_ID, openBracketsWiki);
-    var menu = Menus.getMenu(Menus.AppMenuBar.HELP_MENU);
-    menu.addMenuItem(OPEN_WIKI_COMMAND_ID, [], Menus.AFTER, Commands.HELP_FORUM);    
+    menu.addMenuItem(OPEN_WIKI_COMMAND_ID, [], Menus.AFTER, Commands.HELP_FORUM);
 });
