@@ -1,6 +1,4 @@
 /* 
-    LET'S MAKE A BRACKETS EXTENSION!
-
     This extension was written to help you build one.
     Just read the source and follow the instructions.
 
@@ -21,7 +19,8 @@ define(function (require, exports, module) {
     
     /*
         The code for our extension really starts here.
-        Select "Debug > Show the developer tools"
+        Select "Debug > Show the developer tools" and 
+        sure you selected the "disable cache" option.
         You should see the following log burried under other logs
     */
     console.log("INITIALIZING EXTENSION TUTORIAL");
@@ -30,7 +29,7 @@ define(function (require, exports, module) {
     /*
         Now may be a good time to actually try our extension. 
         Put your cursor below and select "Add Some Text" from the "Help" Menu
-        ->// THIS IS OBVIOUSLY THE WORK OF A GENIUS
+        ->
     */
 
     
@@ -57,7 +56,7 @@ define(function (require, exports, module) {
         Next are some constants used by our extension
     */
     // We need unique IDs for our commands
-    var ADD_TEXT_CMD_ID  = "bracketsturorial.addtext"; 
+    var ADD_TEXT_CMD_ID  = "toolkit.addtext"; 
     // And some strings for the menu items
     var ADD_TEXT_MENU_NAME   = "Add Some Text";
     // This is our comment. Edit it as you like.
@@ -122,10 +121,12 @@ define(function (require, exports, module) {
     
     
     /*
-        You're now ready to make your own extension.
-        You can move this tutorial to the "extensions/disabled" folder.
+        You're now ready to make your own extension!
+        Copy the template folder in the "extensions/user" folder, and 
 
-        If you're getting serious about this, I strongly recommend working
+        You can move this tutorial to the "extensions/disabled" folder to remove it.
+
+        Note: If you're getting serious about this, I strongly recommend working
         from a local copy of Brackets repository.
 
         You can also take a look at the code below which implements 
@@ -136,17 +137,17 @@ define(function (require, exports, module) {
     var FileUtils = brackets.getModule("file/FileUtils");    
     var DocumentManager = brackets.getModule("document/DocumentManager");    
 
-    var OPEN_TUT_MENU_NAME   = "Open Extension Tutorial";
-    var OPEN_SRC_COMMAND_ID  = "bracketsturorial.openSrc";        
+    var OPEN_TUT_MENU_NAME   = "Open Extension Tutorial src";
+    var OPEN_SRC_COMMAND_ID  = "toolkit.openSrc";        
     
     CommandManager.register(OPEN_TUT_MENU_NAME, OPEN_SRC_COMMAND_ID, openSrc);
     
     function openSrc(){
-        var srcFolder = FileUtils.getNativeBracketsDirectoryPath()+"/extensions/user/extension-tutorial/";
+        var srcFolder = FileUtils.getNativeModuleDirectoryPath(module);
         
         ProjectManager.openProject(srcFolder).done(
             function(){
-                var path = srcFolder + "main.js";
+                var path = srcFolder + "/main.js";
                 console.log(path);              
                 DocumentManager.getDocumentForPath(path).done(
                     function(doc) {
@@ -160,4 +161,33 @@ define(function (require, exports, module) {
     menu.addMenuItem(OPEN_SRC_COMMAND_ID, [], Menus.BEFORE, ADD_TEXT_CMD_ID);
     
 
+    
+    /*Open Brackets src command*/
+    var OPEN_BRACKETS_MENU_NAME   = "Open Brackets src";
+    var OPEN_BRACKETS_COMMAND_ID  = "toolkit.openBracketsSrc";        
+        
+    function openBracketsSrc() {
+        ProjectManager.openProject(FileUtils.getNativeBracketsDirectoryPath());
+    }
+    
+    CommandManager.register(OPEN_BRACKETS_MENU_NAME, OPEN_BRACKETS_COMMAND_ID, openBracketsSrc);
+    var menu = Menus.getMenu(Menus.AppMenuBar.HELP_MENU);
+    menu.addMenuItem(OPEN_BRACKETS_COMMAND_ID);
+
+    
+    
+    /*Open wiki command*/
+    var Commands = brackets.getModule("command/Commands");
+    var NativeApp = brackets.getModule("utils/NativeApp");    
+    
+    var OPEN_WIKI_MENU_NAME   = "Brackets Wiki";
+    var OPEN_WIKI_COMMAND_ID  = "toolkit.openBracketsWiki";        
+        
+    function openBracketsWiki() {
+        NativeApp.openURLInDefaultBrowser("https://github.com/adobe/brackets/wiki");
+    }
+    
+    CommandManager.register(OPEN_WIKI_MENU_NAME, OPEN_WIKI_COMMAND_ID, openBracketsWiki);
+    var menu = Menus.getMenu(Menus.AppMenuBar.HELP_MENU);
+    menu.addMenuItem(OPEN_WIKI_COMMAND_ID, [], Menus.AFTER, Commands.HELP_FORUM);    
 });
