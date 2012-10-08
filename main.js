@@ -7,7 +7,7 @@
 */
 
 
-/*These are jslint options. Using linters is recommended, but optional*/
+/*  These are jslint options. Using linters is recommended, but optional */
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
 /*global define, $, brackets */
 
@@ -32,54 +32,116 @@ define(function (require, exports, module) {
     
         
     /*
-        Now may be a good time to actually try our extension. 
-        Put your cursor below and select "Add Some Text" from the "Help" Menu
-        ->
-    */
+        Here, we'll focus on the "Bracket wiki" command, which simply
+        opens the Brackets wiki page in your browser.
 
-    
-    /*
-        Fantastic.
-        To make such magic, we'll need to create commands (which describe some
-        things to execute) and then we'll make menu items to triggers commands
-
-        But first, we need to import the necessary required dependencies.
+        First, we need to import the necessary required dependencies.
     */
     
-    // This will let us register commands
+    // The CommandManager registers command IDs with functions
     var CommandManager = brackets.getModule("command/CommandManager"),
-    // This will let us edit the document that's currently open
-        EditorManager  = brackets.getModule("editor/EditorManager"),
-    // This will let us add menus
-        Menus          = brackets.getModule("command/Menus");
+    // This will let us add menus items
+        Menus          = brackets.getModule("command/Menus"),
+    // This holds the list of all default commands
+        Commands = brackets.getModule("command/Commands"),
+    // This lets us do things through the native app shell
+        NativeApp = brackets.getModule("utils/NativeApp");
 
-
-    /*
-        Next are some constants used by our extension
-    */
-    // A unique ID for our command
-    var ADD_TEXT_CMD_ID  = "toolkit.addtext";
-    // A string for the menu items
-    var ADD_TEXT_MENU_NAME   = "Add Some Text";
-    // The text to be added.
-    var SOME_TEXT = "// THIS IS OBVIOUSLY THE WORK OF A GENIUS!";
+    
     
     /*
+        Next are some constants used by our extension        
+    */
+    // The name of our menu item, as it will appear to users
+    var OPEN_WIKI_MENU_NAME   = "Brackets Wiki";
+    // The command ID - which must be unique
+    var OPEN_WIKI_COMMAND_ID  = "toolkit.openBracketsWiki";
+    // The URL for the page we'll open
+    var WIKI_URL = "https://github.com/adobe/brackets/wiki";
+
+
+    
+    /* 
+        The function which will be called when the command is
+        executed (ie when users select the menu)
+    */
+    function openBracketsWiki() {
+        // This is how you open a webpage in the current browser window
+        NativeApp.openURLInDefaultBrowser(WIKI_URL);   
+
+    }
+
+    /*
+        For our extension to do something, we need to tell the CommandManager:
+        "execute the openBracketsWiki function when this menu item is selected"
+    */    
+    CommandManager.register(OPEN_WIKI_MENU_NAME, OPEN_WIKI_COMMAND_ID, openBracketsWiki);
+
+    
+    /*
+        Now, we'll add a menu item somewhere in the application Help menu
+    */
+    var menu = Menus.getMenu(Menus.AppMenuBar.HELP_MENU);
+    menu.addMenuItem(OPEN_WIKI_COMMAND_ID, [], Menus.AFTER, Commands.HELP_FORUM);    
+    
+        
+    
+    /*
+        And that's it. You're now ready to make your own extension!
+
+        Now, copy the "template" folder of this extension into the 
+        "extensions/user" folder, rename it, and edit it.
+
+        You can take a now look at the code below which implements 
+        the logic behind the other menu items of this extension.
+
+
+        Note: You can move this tutorial to the "extensions/disabled" folder
+        to disable it. If you're getting serious about this, I strongly
+        recommend working from a local copy of the Brackets repository.        
+    */
+           
+    
+    
+    
+    
+    /*
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Add Text Command
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        The following describes a command which adds a comment to 
+        the current document.
+        It is only there for educational purposes (it doesn't do 
+        anything useful), so it is disabled by default. 
+        To unable it, uncomment the last paragraph.
+    */
+    
+    // This will let us edit the document that's currently open
+    var EditorManager  = brackets.getModule("editor/EditorManager");
+    
+    // Constants
+    var ADD_TEXT_CMD_ID  = "toolkit.addtext";
+    var ADD_TEXT_MENU_NAME   = "Add Some Text";
+    var SOME_TEXT = "// THIS IS OBVIOUSLY THE WORK OF A GENIUS!";    
+    
+    /*
+        Let's try it now!
         Edit the SOME_TEXT variable above, and hit Ctrl/CMD+R to reload.
-        Now re-select the "Add Some Text" menu: you should see your text now.
+        Now select the "Help/Add Some Text" menu: you should see your text now.
         ->
     */
     
             
     /*
-        You probably realize that editing and testing from the same app window is far from ideal.
-        Select "Debug > New Brackets Window", and open developer tools from there
-        From now on, make test on that new window and keep editing code in the first one.
+        You probably realize that editing and testing from the same
+        app window is far from ideal. So Select "Debug > New Brackets Window",
+        and open developer tools from there. From now on, make test on that
+        new window and keep editing code in the first one.
     */
     
     
     /*
-        This is the custom function describing how to add text to our file
+        This is the function describing how to add text to our file
     */
     function addSomeText() {
         
@@ -98,45 +160,27 @@ define(function (require, exports, module) {
     }
 
     
-    
-    /*
-        For our extension to do something, we need to tell the Command Manager:
-        "execute the addSomeText function when this menu item is selected"
-    */
-    CommandManager.register(ADD_TEXT_MENU_NAME, ADD_TEXT_CMD_ID, addSomeText);
-
-    
-    
-    /*
-        Now, we'll add a menu item somewhere in the application menu
-        Since this extension adds some text, it should belong to the Edit menu
-        But for the purpose of this extension, we put everything under the Help menu
-    */
-    var menu = Menus.getMenu(Menus.AppMenuBar.HELP_MENU);
     // Menu dividers are a good practice to separate our menu from the rest
     menu.addMenuDivider();
-    // This would actually add the menu item to the menu
-    menu.addMenuItem(ADD_TEXT_CMD_ID);
-    // but in this case, we'll add it later, dynamically (see below)
     
+    
+    // Uncomment the following to unable this command
+    /*
+    CommandManager.register(ADD_TEXT_MENU_NAME, ADD_TEXT_CMD_ID, addSomeText);    
+    menu.addMenuItem(ADD_TEXT_CMD_ID);
+    */
     
 
     
     
     /*
-        You're now ready to make your own extension!
-        Now, copy the "template" folder in the "extensions/user" folder, rename it,
-        and edit it.
-
-        You can move this tutorial to the "extensions/disabled" folder to remove it.
-
-        Note: If you're getting serious about this, I strongly recommend working
-        from a local copy of Brackets repository.
-
-        You can also take a look at the code below which implements 
-        the logic behind the other menu items
-    */
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Open Extension source Command
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         
+        This command opens this very file in Brackets
+    */
+    
     var ProjectManager = brackets.getModule("project/ProjectManager");
     var FileUtils = brackets.getModule("file/FileUtils");
     var DocumentManager = brackets.getModule("document/DocumentManager");
@@ -164,8 +208,16 @@ define(function (require, exports, module) {
     menu.addMenuItem(OPEN_SRC_COMMAND_ID, [], Menus.BEFORE, ADD_TEXT_CMD_ID);
     
 
+
     
-    /*Open Brackets src command*/
+    /*
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Open Brackets source Command
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        This command opens the Brackets src folder in Brackets
+    */
+    
     var OPEN_BRACKETS_MENU_NAME   = "Open Brackets src";
     var OPEN_BRACKETS_COMMAND_ID  = "toolkit.openBracketsSrc";
         
@@ -176,19 +228,4 @@ define(function (require, exports, module) {
     CommandManager.register(OPEN_BRACKETS_MENU_NAME, OPEN_BRACKETS_COMMAND_ID, openBracketsSrc);
     menu.addMenuItem(OPEN_BRACKETS_COMMAND_ID);
 
-    
-    
-    /*Open wiki command*/
-    var Commands = brackets.getModule("command/Commands");
-    var NativeApp = brackets.getModule("utils/NativeApp");
-    
-    var OPEN_WIKI_MENU_NAME   = "Brackets Wiki";
-    var OPEN_WIKI_COMMAND_ID  = "toolkit.openBracketsWiki";
-        
-    function openBracketsWiki() {
-        NativeApp.openURLInDefaultBrowser("https://github.com/adobe/brackets/wiki");
-    }
-    
-    CommandManager.register(OPEN_WIKI_MENU_NAME, OPEN_WIKI_COMMAND_ID, openBracketsWiki);
-    menu.addMenuItem(OPEN_WIKI_COMMAND_ID, [], Menus.AFTER, Commands.HELP_FORUM);
 });
