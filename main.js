@@ -67,14 +67,14 @@ define(function (require, exports, module) {
     */
     function openBracketsWiki() {
         // This is how you open a webpage in the current browser window
-        NativeApp.openURLInDefaultBrowser(WIKI_URL);   
+        NativeApp.openURLInDefaultBrowser(WIKI_URL);
 
     }
 
     /*
         For our extension to do something, we need to tell the CommandManager:
         "execute the openBracketsWiki function when this menu item is selected"
-    */    
+    */
     CommandManager.register(OPEN_WIKI_MENU_NAME, OPEN_WIKI_COMMAND_ID, openBracketsWiki);
 
     
@@ -82,7 +82,7 @@ define(function (require, exports, module) {
         Now, we'll add a menu item somewhere in the application Help menu
     */
     var menu = Menus.getMenu(Menus.AppMenuBar.HELP_MENU);
-    menu.addMenuItem(OPEN_WIKI_COMMAND_ID, [], Menus.AFTER, Commands.HELP_FORUM);    
+    menu.addMenuItem(OPEN_WIKI_COMMAND_ID, [], Menus.AFTER, Commands.HELP_FORUM);
     
         
     
@@ -116,13 +116,15 @@ define(function (require, exports, module) {
         To unable it, uncomment the last paragraph.
     */
     
-    // This will let us edit the document that's currently open
+    // This will give us access to the document that's currently open
+    var DocumentManager = brackets.getModule("document/DocumentManager");
+    // This will let us edit the selection
     var EditorManager  = brackets.getModule("editor/EditorManager");
     
     // Constants
     var ADD_TEXT_CMD_ID  = "toolkit.addtext";
     var ADD_TEXT_MENU_NAME   = "Add Some Text";
-    var SOME_TEXT = "// THIS IS OBVIOUSLY THE WORK OF A GENIUS!";    
+    var SOME_TEXT = "// THIS IS OBVIOUSLY THE WORK OF A GENIUS!";
     
     /*
         Let's try it now!
@@ -144,19 +146,17 @@ define(function (require, exports, module) {
         This is the function describing how to add text to our file
     */
     function addSomeText() {
+        // Document objects represent file contents
+        var currentDoc = DocumentManager.getCurrentDocument();
         
-        // Editor objects let us edit documents
-        // Here we want to access the editor of the current document
+        // Editor objects let us modify selections
         var editor = EditorManager.getCurrentFullEditor();
         
         // Get the position of our cursor in the document
         var pos = editor.getCursorPos();
         
         // Add some text in our document
-        editor._codeMirror.replaceRange(SOME_TEXT, pos);
-
-        // Give focus back to the editor
-        EditorManager.focusEditor();
+        currentDoc.replaceRange(SOME_TEXT, pos);
     }
 
     
@@ -166,7 +166,7 @@ define(function (require, exports, module) {
     
     // Uncomment the following to unable this command
     /*
-    CommandManager.register(ADD_TEXT_MENU_NAME, ADD_TEXT_CMD_ID, addSomeText);    
+    CommandManager.register(ADD_TEXT_MENU_NAME, ADD_TEXT_CMD_ID, addSomeText);
     menu.addMenuItem(ADD_TEXT_CMD_ID);
     */
     
@@ -183,7 +183,6 @@ define(function (require, exports, module) {
     
     var ProjectManager = brackets.getModule("project/ProjectManager");
     var FileUtils = brackets.getModule("file/FileUtils");
-    var DocumentManager = brackets.getModule("document/DocumentManager");
 
     var OPEN_TUT_MENU_NAME   = "Open Extension Tutorial src";
     var OPEN_SRC_COMMAND_ID  = "toolkit.openSrc";
