@@ -1,0 +1,12 @@
+{
+    "name": "com.example.{ext_name}",
+    "title": "{ext_name}",
+    "description": "",
+    "homepage": "", // URL for your project
+    "version": "1.0.0",
+    "author": "",
+    "license": "MIT",
+    "engines": {
+        "brackets": ">=0.20.0"
+    }
+}

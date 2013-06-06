@@ -8,6 +8,12 @@ The toolkit:
 *	Adds useful shortcuts to the `Help` menu to directly open the Brackets `src` folder, and to open the Brackets wiki in a new browser window.
 *	Uses its own source code to help new developers understand how to build extensions.
 
+##Install from URL
+
+1. Open the the Extension Manager from the File menu
+2. Copy paste the URL of the github repo or zip file
+
+
 ##Instructions
 
 Install as any Bracket extension (see below), and check the `Help` menu.
@@ -18,8 +24,3 @@ Alternatively, you can copy it in the `extensions/disabled` folder.
 To learn how to build extensions, choose `Open Extension Tutorial src` under the `Help` menu: it will open its own source code.
 
 
-###Installing Brackets extensions
-
-1. Download this extension using the ZIP button above and unzip it.
-2. Copy it in Brackets' `/extensions/user` folder by selecting `Help > Show Extension Folder` in the app menu. 
-3. Relaunch or Reload Brackets (`Ctrl/Cmd+R`).
